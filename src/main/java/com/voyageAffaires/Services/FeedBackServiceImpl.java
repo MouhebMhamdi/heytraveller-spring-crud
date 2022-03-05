@@ -42,6 +42,7 @@ public class FeedBackServiceImpl implements FeedBackService{
         FeedBack feed=this.getFeedbackById(idFeedBack);
         if(feedBack.getMessage()!=null)feed.setMessage(feedBack.getMessage());
         if(feedBack.getUser()!=null)feed.setUser(feedBack.getUser());
+        if(feedBack.getDateFeedBack()!=null)feed.setDateFeedBack(feedBack.getDateFeedBack());
         return feedBackRepository.save(feed);
     }
 
