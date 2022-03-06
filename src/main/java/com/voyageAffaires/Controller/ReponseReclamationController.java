@@ -5,7 +5,10 @@ import com.voyageAffaires.Services.ReponseReclamationService;
 import com.voyageAffaires.entities.ReponseReclamation;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -14,14 +17,6 @@ import java.util.List;
 public class ReponseReclamationController {
     @Autowired
     private ReponseReclamationService reclamationService;
-    /*
-    ReponseReclamation getReponseReclamationById(Long id);
-    List<ReponseReclamation> getAllReponseReclamations();
-    List<ReponseReclamation> addReponseReclamationandAffectToReclamation(List<ReponseReclamation> reponseReclamations,Long idReclamation );
-    ReponseReclamation updateReponseReclamation(ReponseReclamation reclamation,Long respRecId);
-    void deleteReclamationById(Long idRespReclamation);
-    void deleteAllReclamation();
-     */
 
 
     @GetMapping("/all")
@@ -36,13 +31,19 @@ public class ReponseReclamationController {
 
     @PostMapping("/add/{idReclamation}")
     @ApiOperation(value = "add Reponse Reclamation and Affect To Reclamation")
-    public List<ReponseReclamation> addReponseReclamationandAffectToReclamation(@PathVariable Long idReclamation,@RequestBody List<ReponseReclamation> reponseReclamations){
-        return reclamationService.addReponseReclamationandAffectToReclamation(reponseReclamations,idReclamation);
+    public ResponseEntity<List<ReponseReclamation>> addReponseReclamationandAffectToReclamation(@PathVariable Long idReclamation,@RequestBody List<ReponseReclamation> reponseReclamations)throws Exception{
+        for(ReponseReclamation rp:reponseReclamations){
+            if(rp.getReponse().isEmpty()){
+                throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED,"Reponse must be not empty");
+            }
+        }
+        return new ResponseEntity<>(reclamationService.addReponseReclamationandAffectToReclamation(reponseReclamations,idReclamation),HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
-    public ReponseReclamation updateReponseReclamation(@PathVariable Long id,@RequestBody ReponseReclamation reclamation){
-        return reclamationService.updateReponseReclamation(reclamation,id);
+    public ResponseEntity<ReponseReclamation> updateReponseReclamation(@PathVariable Long id, @RequestBody ReponseReclamation reclamation) throws Exception{
+
+        return new ResponseEntity<>(reclamationService.updateReponseReclamation(reclamation,id), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")

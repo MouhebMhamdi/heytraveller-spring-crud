@@ -7,6 +7,7 @@ import com.voyageAffaires.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -53,8 +54,9 @@ public class FeedBackServiceImpl implements FeedBackService{
     }
 
     @Override
+    @Transactional
     public List<FeedBack> deleteFeedbackByUser(Long idUser) {
-        feedBackRepository.deleteByUser(userRepository.findById(idUser).orElse(null));
+        feedBackRepository.deleteByUserId(idUser);
         return this.getAllFeedbacks();
     }
 

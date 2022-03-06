@@ -14,6 +14,5 @@ import java.util.Date;
 public class ReclamationDTO {
     private String title;
     private String message;
-
     private Date date;
 }
